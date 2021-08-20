@@ -26,7 +26,7 @@ public class TransactionEntity {
 	@Column(name="transaction_id")
 	private int transactionId ;
 	@Column(name = "amount")
-	private  BigInteger amount ;
+	private  Double amount ;
 	@Column(name = "from_account")
 	private  BigInteger  fromAccount ;
 	@Column(name = "to_account")

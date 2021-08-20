@@ -1,11 +1,8 @@
 package com.bankingapi.bank.entity;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,11 +12,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-//@Entity(name = "customer_login_details")
+
+//@Entity(name = "customer_login")
 public class CustomerReigistrationEntity {
 	   
 	@Column(name = "customer_id")
-	private int customerId;
+	private String customerId;
 	@Column(name = "password")
 	private String password;
 	@Column(name = "registration_date")

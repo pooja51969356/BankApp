@@ -18,10 +18,10 @@ public class RegisterAccountResponseDto {
 	
     private String customerId;
     private String name;
-	private Long  accountNumber;
+	private BigInteger  accountNumber;
 	private String accountType;
 	private String branchAddress;
 	private String ifscCode;
-	private BigInteger openingBalance;
+	private Double openingBalance;
 
 }

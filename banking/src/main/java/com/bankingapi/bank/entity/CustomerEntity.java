@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,7 +36,8 @@ public class CustomerEntity {
 	@Column(name = "age")
     private int age;
 	@Column(name = "dob")
-	@Temporal(TemporalType.DATE)
+	//@Temporal(TemporalType.DATE)
+	// @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyy-MM-dd")
     private Date dob;
 	@Column(name = "email_id")
     private String emailId;
@@ -51,11 +53,28 @@ public class CustomerEntity {
     private String panNumber;
 	@Column(name = "phone_number")
     private String phoneNumber;
+	@Column(name = "password")
+    private String password;
+
+	private boolean status;
 	
+	@Column(name = "authorization_status")
+	private boolean authorizationStatus;
 	
 
 	@OneToMany(targetEntity = AccountEntity.class ,cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id",referencedColumnName = "customer_id" )
 	private List<AccountEntity> accountDetail;
-    
+
+
+
+	
+	
+	/*
+	 * @OneToOne(targetEntity = CustomerReigistrationEntity.class ,cascade =
+	 * CascadeType.ALL)
+	 * 
+	 * @JoinColumn(name = "customer_id",referencedColumnName = "customer_id" )
+	 * private CustomerReigistrationEntity loginDetails;
+	 */
 }

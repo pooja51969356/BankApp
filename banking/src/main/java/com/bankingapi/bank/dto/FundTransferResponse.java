@@ -11,12 +11,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserLoginResponseDto {
-	 
-	    private String name;
-	    private String customerId;
-	    private String password;
-	    private boolean registrationStatus;
-	    private String ResponseMessage;
-		
+public class FundTransferResponse {
+	private boolean transferStatus;
+	private String responseMessage;
+	private BigInteger fromAccount;
+	private BigInteger toAccount;
+	
+	
 }

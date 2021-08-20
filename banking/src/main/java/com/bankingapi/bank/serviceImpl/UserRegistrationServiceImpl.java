@@ -32,30 +32,55 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	
 
 	@Override
-	public List<RegisterAccountResponseDto> createAccount(RegisterAccountRequestDto registerAccountRequestDto) {
+	public UserLoginResponseDto createAccount(RegisterAccountRequestDto registerAccountRequestDto) {
 		
 		//check basic validation before save customer detail
 		if(registerAccountRequestDto==null) {
 			//thow exception
 		}
-		
-		CustomerEntity panBasedDetails=customerRespository.findByPanNumber(registerAccountRequestDto.getPanNumber());
-		if(panBasedDetails!=null) {
-			//thow exception details already exist
+				
+		boolean flag = true;
+		String message = "Registration Succesful";
+		CustomerEntity responseMas = null;
+
+		UserLoginResponseDto accountResponseDto=new UserLoginResponseDto();	
+		if(EmailAlreadyExists(registerAccountRequestDto.getEmail())) {
+			message = "Email already Exists";
+			flag = false;
 		}
-		CustomerEntity responseMas=customerRespository.save(prepareCustomerDetail(registerAccountRequestDto));
+		
+		if(AdhaarNumberAlreadyExists(registerAccountRequestDto.getAdhaarNumber())) {
+			message = "Phone number already Exists";
+			flag = false;
+		}
+		
+		if(PanAlreadyExists(registerAccountRequestDto.getPanNumber())) {
+			message = "Username already Exists";
+			flag = false;
+		}
+		
+		if(flag) {
+
+		responseMas=customerRespository.save(prepareCustomerDetail(registerAccountRequestDto));
 		
 		System.out.println(" CustomerId: "+responseMas.getCustomerId()+", AccountId: "+responseMas.getAccountDetail().get(0).getAccountNumber());
+		}else {
+			// thow exception
+		}
+				
+			accountResponseDto.setRegistrationStatus(flag);
+			accountResponseDto.setResponseMessage(message);
+			return prepareUserLoginResponseDto(responseMas,accountResponseDto);	
 		
 		
-		return prepareRegisterAccountResponseDto(responseMas);
 	}
 
 
 	private CustomerEntity prepareCustomerDetail(RegisterAccountRequestDto registerAccountRequestDto) {
 		
 		CustomerEntity customerMas=new CustomerEntity();
-		customerMas.setCustomerId(CustomerIdGeneration());
+		customerMas.setCustomerId(CustomerIdGeneration());	
+		customerMas.setPassword(CustomerPasswordGeneration());
 		customerMas.setFirstName(registerAccountRequestDto.getFirstName());
 		customerMas.setLastName(registerAccountRequestDto.getLastName());
 		customerMas.setGender(registerAccountRequestDto.getGender());
@@ -68,10 +93,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		
 		return customerMas;
 	}
-	public static int accnoGeneration() {
-		int n=9;
-	    int m = (int) Math.pow(10, n - 1);
-	    return m + new Random().nextInt(9 * m);
+	public static BigInteger accnoGeneration() {
+		BigInteger no = null;
+		return no;
 	}
 	public static String  CustomerIdGeneration() {
 		
@@ -91,7 +115,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		accountMas.setAccountType("Saving");
 		accountMas.setBranchAddress("Gomti Nagar Lucknow");
 		accountMas.setIfscCode("SBIIN0001");
-		accountMas.setOpeningBalance(new BigInteger("500"));
+		accountMas.setOpeningBalance(10000.0);
 		
 		List<AccountEntity> list=new ArrayList<>();
 		list.add(accountMas);
@@ -100,9 +124,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		
 	}
 ///Success Password andCustomerId Response
-	private UserLoginResponseDto prepareUserLoginResponseDto(CustomerReigistrationEntity responseMas) {
-		
-		UserLoginResponseDto accountResponseDto=new UserLoginResponseDto();				
+	private UserLoginResponseDto prepareUserLoginResponseDto(CustomerEntity responseMas,UserLoginResponseDto accountResponseDto) {
+					
 		accountResponseDto.setCustomerId(responseMas.getCustomerId());
 		accountResponseDto.setPassword(responseMas.getPassword());		
 		return accountResponseDto;
@@ -122,7 +145,44 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		
 		return List.of(accountResponseDto);
 	}
+
 	
+	/*
+	 * public boolean usernameAlreadyExists(String username) { try { CustomerEntity
+	 * u=customerRespository.findByUsername(username);
+	 * System.out.println(u.toString()); return true; } catch (Exception e) { }
+	 * return false; }
+	 */
+	public boolean PanAlreadyExists(String username) {
+		try {
+			CustomerEntity u=customerRespository.findByPanNumber(username);
+			System.out.println(u.toString());
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
+
+	public boolean EmailAlreadyExists(String email) {
+		try {
+			CustomerEntity u=customerRespository.findByEmailId(email);
+			System.out.println(u.toString());
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
+	
+
+	public boolean AdhaarNumberAlreadyExists(String l) {
+		try {
+			CustomerEntity u=customerRespository.findByAdhaarNumber(l);
+			System.out.println(u.toString());
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
 	
 
 }

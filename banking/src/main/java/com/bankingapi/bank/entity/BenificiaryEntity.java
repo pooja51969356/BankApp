@@ -33,5 +33,7 @@ public class BenificiaryEntity {
 	private  String  branchAdd ;
 	@Column(name = "name")
 	private  String  name ;
+	@Column(name = "balance")
+	private  Double  balance ;
 
 }

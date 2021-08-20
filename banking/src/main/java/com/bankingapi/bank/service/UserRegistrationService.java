@@ -5,10 +5,11 @@ import java.util.List;
 
 import com.bankingapi.bank.dto.RegisterAccountRequestDto;
 import com.bankingapi.bank.dto.RegisterAccountResponseDto;
+import com.bankingapi.bank.dto.UserLoginResponseDto;
 
 
 public interface UserRegistrationService {
-	public List<RegisterAccountResponseDto> createAccount(RegisterAccountRequestDto registerAccountRequestDto);
+	public UserLoginResponseDto createAccount(RegisterAccountRequestDto registerAccountRequestDto);
 
 	
 }

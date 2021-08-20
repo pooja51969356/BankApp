@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bankingapi.bank.dto.RegisterAccountRequestDto;
 import com.bankingapi.bank.dto.RegisterAccountResponseDto;
+import com.bankingapi.bank.dto.UserLoginResponseDto;
 import com.bankingapi.bank.service.AccountHistroyService;
 import com.bankingapi.bank.service.UserRegistrationService;
 @RestController
 @Validated
-public class Controller {
+public class RegistrationController {
 
 	@Autowired
 	UserRegistrationService createAccountService;
@@ -25,7 +26,7 @@ public class Controller {
 	AccountHistroyService accountHistroyService;
 	
 	@RequestMapping(path = "api/product/createAccount",method = RequestMethod.POST)
-	public ResponseEntity<List<RegisterAccountResponseDto>> createAccount(@RequestBody RegisterAccountRequestDto registerAccountRequestDto) {
+	public ResponseEntity<UserLoginResponseDto>createAccount(@RequestBody RegisterAccountRequestDto registerAccountRequestDto) {
 		
 		return ResponseEntity.ok(createAccountService.createAccount(registerAccountRequestDto));
 

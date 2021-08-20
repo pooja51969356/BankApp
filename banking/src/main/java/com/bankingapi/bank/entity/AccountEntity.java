@@ -29,7 +29,7 @@ public class AccountEntity {
 	@Id
 //	@Digits(integer = 8, fraction = 1, message = "InValid accountNumber")
 	@Column(name = "account_number")
-	private long  accountNumber;
+	private BigInteger  accountNumber;
 	@Column(name = "account_type")
 	private String accountType;
 	@Column(name = "branch_address")
@@ -40,7 +40,10 @@ public class AccountEntity {
 	@Column(name = "ifsc_code")
 	private String ifscCode;
 	@Column(name = "opening_balance")
-	private BigInteger openingBalance;
+//	@NotEmpty(message = "balance should not be empty")
+//	@NotNull(message = "please provide valid balance")
+//	@Size(min = 5, max = 10, message = "please provide valid balance")
+	private Double openingBalance;
 	
 
 	
