@@ -28,10 +28,8 @@ import lombok.ToString;
 public class CustomerEntity {
 
 	@Id
-	@SequenceGenerator(name="customer_details_customer_id_seq",sequenceName="customer_details_customer_id_seq", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="customer_details_customer_id_seq")
 	@Column(name = "customer_id")
-    private int customerId;
+    private String customerId;
 	@Column(name = "address")
     private String address;
 	@Column(name = "age")

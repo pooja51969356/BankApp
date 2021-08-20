@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 public class RegisterAccountResponseDto {
 	
-    private int customerId;
+    private String customerId;
     private String name;
 	private Long  accountNumber;
 	private String accountType;

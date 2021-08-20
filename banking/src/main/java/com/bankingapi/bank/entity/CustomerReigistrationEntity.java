@@ -1,6 +1,7 @@
 package com.bankingapi.bank.entity;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,5 +23,5 @@ public class CustomerReigistrationEntity {
 	@Column(name = "password")
 	private String password;
 	@Column(name = "registration_date")
-	private BigInteger registrationDate;
+	private Date registrationDate;
 }

@@ -2,7 +2,6 @@ package com.bankingapi.bank.entity;
 
 import javax.persistence.Entity;
 
-
 import lombok.Data;
 
 
@@ -11,8 +10,7 @@ import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
@@ -29,8 +27,7 @@ import lombok.ToString;
 public class AccountEntity {
 	
 	@Id
-	@SequenceGenerator(name="account_details_account_number_seq",sequenceName="account_details_account_number_seq", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="account_details_account_number_seq")
+//	@Digits(integer = 8, fraction = 1, message = "InValid accountNumber")
 	@Column(name = "account_number")
 	private long  accountNumber;
 	@Column(name = "account_type")
@@ -39,6 +36,7 @@ public class AccountEntity {
 	private String branchAddress;
 //	@Column(name = "customer_id")
 //	private int customerId;
+	//@NotEmpty(message = "ifsccode should not be empty")
 	@Column(name = "ifsc_code")
 	private String ifscCode;
 	@Column(name = "opening_balance")

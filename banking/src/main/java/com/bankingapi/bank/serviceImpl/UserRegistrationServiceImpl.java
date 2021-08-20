@@ -9,13 +9,17 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import com.bankingapi.bank.dto.RegisterAccountRequestDto;
 import com.bankingapi.bank.dto.RegisterAccountResponseDto;
+import com.bankingapi.bank.dto.UserLoginResponseDto;
 import com.bankingapi.bank.entity.AccountEntity;
 import com.bankingapi.bank.entity.CustomerEntity;
+import com.bankingapi.bank.entity.CustomerReigistrationEntity;
 import com.bankingapi.bank.repository.CustomerRespository;
 import com.bankingapi.bank.service.UserRegistrationService;
+import com.bankingapi.bank.utility.PasswordUtil;
 
 
 @Service
@@ -51,7 +55,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	private CustomerEntity prepareCustomerDetail(RegisterAccountRequestDto registerAccountRequestDto) {
 		
 		CustomerEntity customerMas=new CustomerEntity();
-		
+		customerMas.setCustomerId(CustomerIdGeneration());
 		customerMas.setFirstName(registerAccountRequestDto.getFirstName());
 		customerMas.setLastName(registerAccountRequestDto.getLastName());
 		customerMas.setGender(registerAccountRequestDto.getGender());
@@ -69,7 +73,17 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	    int m = (int) Math.pow(10, n - 1);
 	    return m + new Random().nextInt(9 * m);
 	}
-
+	public static String  CustomerIdGeneration() {
+		
+		String	genCustomerId ="" ;
+		return genCustomerId;
+	}
+	
+	////Password generate
+	public static String CustomerPasswordGeneration() {
+		String password = PasswordUtil.generatePassword();
+		return password;
+	}
 	private List<AccountEntity> prepareAccountDetail() {
 		
 		AccountEntity accountMas=new AccountEntity();
@@ -85,8 +99,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		return list;
 		
 	}
-
-
+///Success Password andCustomerId Response
+	private UserLoginResponseDto prepareUserLoginResponseDto(CustomerReigistrationEntity responseMas) {
+		
+		UserLoginResponseDto accountResponseDto=new UserLoginResponseDto();				
+		accountResponseDto.setCustomerId(responseMas.getCustomerId());
+		accountResponseDto.setPassword(responseMas.getPassword());		
+		return accountResponseDto;
+	}
 	private List<RegisterAccountResponseDto> prepareRegisterAccountResponseDto(CustomerEntity responseMas) {
 		
 		RegisterAccountResponseDto accountResponseDto=new RegisterAccountResponseDto();
