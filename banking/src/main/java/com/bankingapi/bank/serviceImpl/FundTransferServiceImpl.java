@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import com.bankingapi.bank.service.FundTransferService;
 
 @Service
 public class FundTransferServiceImpl implements FundTransferService{
+	private static final Logger logger = LoggerFactory.getLogger(FundTransferServiceImpl.class);
 
 	@Autowired
 	private FundTransferRepository Fdao;
@@ -40,24 +43,28 @@ public class FundTransferServiceImpl implements FundTransferService{
 		BenificiaryEntity receiverAccount=bdao.findByAccountNo(toAccount);
 				if(senderAccount.getAccountNumber()!=null) 
 				{
+					logger.info("enter in block");
 					if(senderAccount.getOpeningBalance()>amount) {
-						
+						logger.info("amount Check");
 						senderAccount.setOpeningBalance(senderAccount.getOpeningBalance()-amount);
 						receiverAccount.setBalance(receiverAccount.getBalance()+amount);
 						addAction(fromAccount, toAccount, amount);
 						dao.save(senderAccount);
-						bdao.save(receiverAccount);
+						bdao.save(receiverAccount);  ///if want to update beneficiary amount
+						logger.info("save data");
 						response.setResponseMessage("Rs."+amount+" successfully transferred to account "+toAccount);
 						response.setTransferStatus(flag);
 					
 					}
 					else {
+						logger.info("amount Insufficient");
 						flag=false;
 						response.setResponseMessage("Insufficient funds to complete the transfer");
 						response.setTransferStatus(flag);
 						}
 				}
 				else {
+					logger.info("Account number is not exist");
 					flag=false;
 					response.setResponseMessage("Account number is not exist");
 					response.setTransferStatus(flag);
@@ -67,6 +74,7 @@ public class FundTransferServiceImpl implements FundTransferService{
 		} 
 		
 		catch (Exception e) {
+			logger.error("Invalid Account number");
 			flag=false;
 			response.setResponseMessage("Account number is incorrect");
 			response.setTransferStatus(flag);

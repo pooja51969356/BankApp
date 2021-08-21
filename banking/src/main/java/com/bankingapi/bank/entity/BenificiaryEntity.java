@@ -24,7 +24,6 @@ public class BenificiaryEntity {
     
     
 	@Id
-	@GeneratedValue
 	@Column(name="account_no")
 	private BigInteger accountNo ;
 	@Column(name = "ifs_code")

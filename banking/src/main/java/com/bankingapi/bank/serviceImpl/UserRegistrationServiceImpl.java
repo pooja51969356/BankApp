@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -17,6 +19,7 @@ import com.bankingapi.bank.dto.UserLoginResponseDto;
 import com.bankingapi.bank.entity.AccountEntity;
 import com.bankingapi.bank.entity.CustomerEntity;
 import com.bankingapi.bank.entity.CustomerReigistrationEntity;
+import com.bankingapi.bank.exception.InavalidAccountException;
 import com.bankingapi.bank.repository.CustomerRespository;
 import com.bankingapi.bank.service.UserRegistrationService;
 import com.bankingapi.bank.utility.PasswordUtil;
@@ -24,6 +27,7 @@ import com.bankingapi.bank.utility.PasswordUtil;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService{
+	private static final Logger logger = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
 
 	@Autowired
 	CustomerRespository customerRespository;
@@ -36,12 +40,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		
 		//check basic validation before save customer detail
 		if(registerAccountRequestDto==null) {
-			//thow exception
+			 throw new InavalidAccountException("Please check Details");
 		}
 				
 		boolean flag = true;
 		String message = "Registration Succesful";
-		CustomerEntity responseMas = null;
+		CustomerEntity responseMas = new CustomerEntity();
 
 		UserLoginResponseDto accountResponseDto=new UserLoginResponseDto();	
 		if(EmailAlreadyExists(registerAccountRequestDto.getEmail())) {
@@ -49,29 +53,34 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 			flag = false;
 		}
 		
-		if(AdhaarNumberAlreadyExists(registerAccountRequestDto.getAdhaarNumber())) {
+		else if(AdhaarNumberAlreadyExists(registerAccountRequestDto.getAdhaarNumber())) {
 			message = "Phone number already Exists";
 			flag = false;
 		}
 		
-		if(PanAlreadyExists(registerAccountRequestDto.getPanNumber())) {
+		else if(PanAlreadyExists(registerAccountRequestDto.getPanNumber())) {
 			message = "Username already Exists";
 			flag = false;
 		}
 		
-		if(flag) {
-
+		
+		if(!flag) {
+			
+			throw new InavalidAccountException(message);
+		}
+		
+		accountResponseDto.setRegistrationStatus(flag);
+		accountResponseDto.setResponseMessage(message);	
 		responseMas=customerRespository.save(prepareCustomerDetail(registerAccountRequestDto));
 		
-		System.out.println(" CustomerId: "+responseMas.getCustomerId()+", AccountId: "+responseMas.getAccountDetail().get(0).getAccountNumber());
-		}else {
-			// thow exception
-		}
-				
-			accountResponseDto.setRegistrationStatus(flag);
-			accountResponseDto.setResponseMessage(message);
-			return prepareUserLoginResponseDto(responseMas,accountResponseDto);	
+		return prepareUserLoginResponseDto(responseMas,accountResponseDto);	
+	
 		
+	
+				
+		
+				
+			
 		
 	}
 
@@ -85,21 +94,24 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		customerMas.setLastName(registerAccountRequestDto.getLastName());
 		customerMas.setGender(registerAccountRequestDto.getGender());
 		customerMas.setAge(registerAccountRequestDto.getAge());
+		customerMas.setEmailId(registerAccountRequestDto.getEmail());
+		customerMas.setDob(registerAccountRequestDto.getDob());
 		customerMas.setAdhaarNumber(registerAccountRequestDto.getAdhaarNumber());
 		customerMas.setPanNumber(registerAccountRequestDto.getPanNumber());
-		customerMas.setAddress(registerAccountRequestDto.getAddress());		
+		customerMas.setAddress(registerAccountRequestDto.getAddress());	
+		customerMas.setStatus(true);
 		customerMas.setAccountDetail(prepareAccountDetail());
 		
 		
 		return customerMas;
 	}
 	public static BigInteger accnoGeneration() {
-		BigInteger no = null;
+		BigInteger no =BigInteger.valueOf(12344444);
 		return no;
 	}
 	public static String  CustomerIdGeneration() {
 		
-		String	genCustomerId ="" ;
+		String	genCustomerId ="12233" ;
 		return genCustomerId;
 	}
 	
@@ -125,9 +137,11 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	}
 ///Success Password andCustomerId Response
 	private UserLoginResponseDto prepareUserLoginResponseDto(CustomerEntity responseMas,UserLoginResponseDto accountResponseDto) {
-					
+		accountResponseDto.setRegistrationStatus(responseMas.isStatus());			
 		accountResponseDto.setCustomerId(responseMas.getCustomerId());
-		accountResponseDto.setPassword(responseMas.getPassword());		
+		accountResponseDto.setPassword(responseMas.getPassword());
+		accountResponseDto.setName(responseMas.getFirstName()+" "+responseMas.getLastName());		
+		
 		return accountResponseDto;
 	}
 	private List<RegisterAccountResponseDto> prepareRegisterAccountResponseDto(CustomerEntity responseMas) {
@@ -153,9 +167,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 	 * System.out.println(u.toString()); return true; } catch (Exception e) { }
 	 * return false; }
 	 */
-	public boolean PanAlreadyExists(String username) {
+	public boolean PanAlreadyExists(String panno) {
 		try {
-			CustomerEntity u=customerRespository.findByPanNumber(username);
+			CustomerEntity u=customerRespository.findByPanNumber(panno);
 			System.out.println(u.toString());
 			return true;
 		} catch (Exception e) {

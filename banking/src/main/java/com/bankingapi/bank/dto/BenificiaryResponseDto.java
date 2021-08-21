@@ -6,18 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserLoginResponseDto {
-	 
-	   
-	    private boolean registrationStatus;
-	    private String ResponseMessage;
-	    private String name="";
-	    private String customerId="";
-	    private String password="";
-		
+public class BenificiaryResponseDto {
+	private BigInteger toAccountNo ;	
+	private  String ifsCode ;	
+	private  String  name ;
+	private  String  status ;
 }
